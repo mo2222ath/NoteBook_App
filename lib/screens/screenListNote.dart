@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notebook_task_flutter_mhr/Dialog/confirmation_dialog.dart';
 import 'package:notebook_task_flutter_mhr/db_helpers/note_helper.dart';
 import 'package:notebook_task_flutter_mhr/models/note.dart';
 import 'package:notebook_task_flutter_mhr/screens/screenDetails.dart';
@@ -48,7 +49,8 @@ class screenListNoteState extends State<screenListNote> {
             elevation: 2.0,
             child: ListTile(
               leading: CircleAvatar(
-                backgroundColor: getPriorityColor(this.noteList[position].priorityNote),
+                backgroundColor:
+                    getPriorityColor(this.noteList[position].priorityNote),
                 child: getPriorityIcon(this.noteList[position].priorityNote),
               ),
               title: Text(this.noteList[position].titleNote, style: textStyle),
@@ -57,7 +59,18 @@ class screenListNoteState extends State<screenListNote> {
               trailing: GestureDetector(
                 child: Icon(Icons.delete),
                 onTap: () {
-                  _deleteNote(context, this.noteList[position]);
+                  var res = showDialog(
+                      context: context,
+                      builder: (context) =>
+                          ConfirmationDialog("Do You Want To Delete !!"));
+//                  res.then((value) =>  print("Id that was loaded: $value"));
+                  setState(() {
+                    res.then((value) {
+                      if (value == true) {
+                        _deleteNote(context, this.noteList[position]);
+                      }
+                    });
+                  });
                 },
               ),
               onTap: () {
@@ -90,6 +103,7 @@ class screenListNoteState extends State<screenListNote> {
 
     setState(() {
       if (res == true) {
+//        _showSnackBar(context,'Moaaz');
         updateListView();
       }
     });
@@ -117,7 +131,10 @@ class screenListNoteState extends State<screenListNote> {
   }
 
   void _showSnackBar(BuildContext context, String message) {
-    final snackBar = SnackBar(content: Text(message));
+    final snackBar = SnackBar(
+      content: Text(message),
+      duration: Duration(seconds: 1),
+    );
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
@@ -130,9 +147,9 @@ class screenListNoteState extends State<screenListNote> {
   }
 
   Icon getPriorityIcon(int priority) {
-    if(priority == 1){
+    if (priority == 1) {
       return Icon(Icons.play_arrow);
-    }else {
+    } else {
       return Icon(Icons.keyboard_arrow_right);
     }
   }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:notebook_task_flutter_mhr/Dialog/confirmation_dialog.dart';
 import 'package:notebook_task_flutter_mhr/db_helpers/note_helper.dart';
 import 'package:notebook_task_flutter_mhr/models/note.dart';
+import 'package:notebook_task_flutter_mhr/screens/screenListNote.dart';
 
 // ignore: camel_case_types, must_be_immutable
 class screenDetails extends StatefulWidget {
@@ -22,7 +24,9 @@ class screenDetailsState extends State<screenDetails> {
   List<String> priority = ["Low", "High"];
   var prioritySelected;
   String _titleAppBar;
+  String resultSave;
   Note note;
+  var listToLastScreen = ['true'];
 
   screenDetailsState(this.note, this._titleAppBar);
 
@@ -147,7 +151,20 @@ class screenDetailsState extends State<screenDetails> {
           if (nameOfButton == "Save") {
             _save();
           } else if (nameOfButton == "Delete") {
-            _delete();
+            if (note.idNote == null) {
+              _delete();
+            } else {
+              var res = showDialog(
+                  context: context,
+                  builder: (context) => ConfirmationDialog("Do You Want To Delete !!" ));
+              setState(() {
+                res.then((value) {
+                  if (value == true) {
+                    _delete();
+                  }
+                });
+              });
+            }
           }
         });
       },
@@ -194,8 +211,6 @@ class screenDetailsState extends State<screenDetails> {
   }
 
   void _save() async {
-    moveToLastScreen();
-
     note.dateNote = DateFormat.yMMMd().format(DateTime.now());
     int result;
     if (note.idNote != null) {
@@ -208,11 +223,17 @@ class screenDetailsState extends State<screenDetails> {
 
     if (result != 0) {
       // Success
-      _showAlertDialog('Status', 'Note Saved Successfully');
+      resultSave = 'Status :  Note Saved Successfully';
+
+//      _showAlertDialog('Status', 'Note Saved Successfully');
     } else {
       // Failure
-      _showAlertDialog('Status', 'Problem Saving Note');
+      resultSave = 'Status : Problem Saving Note';
+//      _showAlertDialog('Status', 'Problem Saving Note');
     }
+    listToLastScreen.add(resultSave);
+//    _showSnackBar(context,resultSave);
+    moveToLastScreen();
   }
 
   void _delete() async {
@@ -237,7 +258,16 @@ class screenDetailsState extends State<screenDetails> {
     AlertDialog alertDialog = AlertDialog(
       title: Text(title),
       content: Text(message),
+      elevation: 0.5,
     );
     showDialog(context: context, builder: (_) => alertDialog);
+  }
+
+  void _showSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      duration: Duration(seconds: 1),
+    );
+    Scaffold.of(context).showSnackBar(snackBar);
   }
 }
