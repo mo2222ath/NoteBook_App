@@ -64,11 +64,17 @@ class screenDetailsState extends State<screenDetails> {
               ),
               Padding(
                 padding: EdgeInsets.all(10.0),
-                child: _createTextFormFiled("Title", "Write Your title here", textStyle, titleController),
+                child: _createTextFormFiled("Title", "Write Your title here",
+                    textStyle, titleController, 1),
               ),
               Padding(
                   padding: EdgeInsets.all(10.0),
-                  child: _createTextFormFiled("Description", "Write Your description here", textStyle,descriptionController)),
+                  child: _createTextFormFiled(
+                      "Description",
+                      "Write Your description here",
+                      textStyle,
+                      descriptionController,
+                      15)),
               Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Row(
@@ -106,10 +112,11 @@ class screenDetailsState extends State<screenDetails> {
     );
   }
 
-  Widget _createTextFormFiled(
-      String label, String hint, TextStyle textStyle, var controllerName) {
+  Widget _createTextFormFiled(String label, String hint, TextStyle textStyle,
+      var controllerName, var maxLines) {
     return TextFormField(
       style: textStyle,
+      maxLines: maxLines,
       controller: controllerName,
       onChanged: (value) {
         if (label == "Title") {
@@ -187,10 +194,7 @@ class screenDetailsState extends State<screenDetails> {
   }
 
   void _save() async {
-
-
-      moveToLastScreen();
-
+    moveToLastScreen();
 
     note.dateNote = DateFormat.yMMMd().format(DateTime.now());
     int result;

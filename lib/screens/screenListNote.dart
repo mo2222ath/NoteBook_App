@@ -47,7 +47,10 @@ class screenListNoteState extends State<screenListNote> {
             color: Colors.teal,
             elevation: 2.0,
             child: ListTile(
-              leading: Icon(Icons.keyboard_arrow_up),
+              leading: CircleAvatar(
+                backgroundColor: getPriorityColor(this.noteList[position].priorityNote),
+                child: getPriorityIcon(this.noteList[position].priorityNote),
+              ),
               title: Text(this.noteList[position].titleNote, style: textStyle),
               subtitle:
                   Text(this.noteList[position].dateNote, style: textStyle),
@@ -80,7 +83,8 @@ class screenListNoteState extends State<screenListNote> {
   }
 
   void navigateToScreenDetails(Note note, String title) async {
-    var res = await Navigator.push(context, MaterialPageRoute(builder: (context) {
+    var res =
+        await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return screenDetails(note, title);
     }));
 
@@ -115,5 +119,21 @@ class screenListNoteState extends State<screenListNote> {
   void _showSnackBar(BuildContext context, String message) {
     final snackBar = SnackBar(content: Text(message));
     Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  Color getPriorityColor(int priority) {
+    if (priority == 1) {
+      return Colors.tealAccent;
+    } else {
+      return Colors.lightBlue;
+    }
+  }
+
+  Icon getPriorityIcon(int priority) {
+    if(priority == 1){
+      return Icon(Icons.play_arrow);
+    }else {
+      return Icon(Icons.keyboard_arrow_right);
+    }
   }
 }
