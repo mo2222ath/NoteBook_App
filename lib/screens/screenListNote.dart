@@ -45,7 +45,7 @@ class screenListNoteState extends State<screenListNote> {
       itemCount: count,
       itemBuilder: (BuildContext context, int position) {
         return Card(
-            color: Colors.teal,
+            color: getCardColor(noteList[position].colorNote),
             elevation: 2.0,
             child: ListTile(
               leading: CircleAvatar(
@@ -140,17 +140,32 @@ class screenListNoteState extends State<screenListNote> {
 
   Color getPriorityColor(int priority) {
     if (priority == 1) {
-      return Colors.tealAccent;
+      return Colors.lime;
     } else {
-      return Colors.lightBlue;
+      return Colors.white38;
     }
   }
 
   Icon getPriorityIcon(int priority) {
     if (priority == 1) {
-      return Icon(Icons.play_arrow);
+      return Icon(Icons.priority_high);
     } else {
-      return Icon(Icons.keyboard_arrow_right);
+      return Icon(Icons.low_priority);
     }
   }
+
+  Color getCardColor(var favColor) {
+    if (favColor == "Red") {
+      return Colors.red;
+    } else if(favColor == "Green") {
+      return Colors.green;
+    }
+    else if(favColor == "Yellow") {
+      return Colors.yellow;
+    }
+    else {
+      return Colors.grey;
+    }
+  }
+
 }

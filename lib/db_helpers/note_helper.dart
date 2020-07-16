@@ -19,6 +19,7 @@ class NoteHelper{
   String titleNote = 'title';
   String descriptionNote = 'description';
   String dateNote = 'date';
+  String colorNote = 'color';
 
   NoteHelper._createInstance();
 
@@ -47,7 +48,7 @@ class NoteHelper{
 //   Create Database
   void _createDb(Database database, int version) async {
     await database.execute('CREATE TABLE $tableNote($idNote INTEGER PRIMARY KEY AUTOINCREMENT, $titleNote TEXT, '
-        '$descriptionNote TEXT, $priorityNote INTEGER, $dateNote TEXT)');
+        '$descriptionNote TEXT, $priorityNote INTEGER, $dateNote TEXT , $colorNote TEXT)');
   }
 
 //  Get all Notes from Database ..
@@ -95,6 +96,9 @@ class NoteHelper{
     // For loop to create a 'Note List' from a 'Map List'
     for (int i = 0; i < countNoteList; i++) {
       allNoteList.add(Note.fromMapObject(noteListMap[i]));
+    }
+    for(int i =0 ; i<allNoteList.length;i++){
+      print(allNoteList[i]);
     }
     return allNoteList;
   }

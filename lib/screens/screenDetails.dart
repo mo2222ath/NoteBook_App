@@ -26,7 +26,8 @@ class screenDetailsState extends State<screenDetails> {
   String _titleAppBar;
   String resultSave;
   Note note;
-  var listToLastScreen = ['true'];
+  var listColors = ['Grey','Green', 'Yellow','Red'];
+  var colorSelected;
 
   screenDetailsState(this.note, this._titleAppBar);
 
@@ -40,6 +41,7 @@ class screenDetailsState extends State<screenDetails> {
     // TODO: implement initState
     super.initState();
     prioritySelected = priority[0];
+    colorSelected = listColors[0];
   }
 
   @override
@@ -62,10 +64,32 @@ class screenDetailsState extends State<screenDetails> {
           ),
           body: ListView(
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(10.0),
-                child: _createDropdownButton(priority, prioritySelected),
-              ),
+              Center(
+                  child: Row(
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Text(
+                        "Priority",
+                          style: textStyle,
+                      )),
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: _createDropdownButton(priority, prioritySelected),
+                  ),
+                  Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Text(
+                        "Color",
+                            style: textStyle
+                      )),
+                  Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child:
+                        _createColorDropdownButton(listColors, colorSelected),
+                  ),
+                ],
+              )),
               Padding(
                 padding: EdgeInsets.all(10.0),
                 child: _createTextFormFiled("Title", "Write Your title here",
@@ -116,6 +140,24 @@ class screenDetailsState extends State<screenDetails> {
     );
   }
 
+  Widget _createColorDropdownButton(List<String> list, String selected) {
+    return DropdownButton<String>(
+      items: list.map((String item) {
+        return DropdownMenuItem(
+          value: item,
+          child: Text(item),
+        );
+      }).toList(),
+      value: getSelectedColor(),
+      onChanged: (String select) {
+        setState(() {
+          colorSelected = select;
+          updateColor(select);
+        });
+      },
+    );
+  }
+
   Widget _createTextFormFiled(String label, String hint, TextStyle textStyle,
       var controllerName, var maxLines) {
     return TextFormField(
@@ -156,7 +198,8 @@ class screenDetailsState extends State<screenDetails> {
             } else {
               var res = showDialog(
                   context: context,
-                  builder: (context) => ConfirmationDialog("Do You Want To Delete !!" ));
+                  builder: (context) =>
+                      ConfirmationDialog("Do You Want To Delete !!"));
               setState(() {
                 res.then((value) {
                   if (value == true) {
@@ -201,6 +244,21 @@ class screenDetailsState extends State<screenDetails> {
     return priority;
   }
 
+  getSelectedColor(){
+    if(note.idNote == null){
+      return colorSelected;
+    }
+    else {
+      return note.colorNote;
+    }
+  }
+
+  void updateColor(String value) {
+        print("*************************");
+        print(value);
+        note.colorNote = value;
+  }
+
   void updateTitle() {
     note.titleNote = titleController.text;
   }
@@ -211,29 +269,30 @@ class screenDetailsState extends State<screenDetails> {
   }
 
   void _save() async {
-    note.dateNote = DateFormat.yMMMd().format(DateTime.now());
+//    print("########################################");
+    moveToLastScreen();
+//    note.dateNote = DateFormat.yMMMd().format(DateTime.now());
+    note.dateNote = DateFormat.yMMMMEEEEd().format(DateTime.now());
+
     int result;
     if (note.idNote != null) {
       // Case 1: Update operation
+//      print("*********Note Update************");
+//      print(note);
       result = await noteHelper.updateNote(note);
     } else {
       // Case 2: Insert Operation
+//      print("*********Note Insert************");
+//      print(note);
       result = await noteHelper.insertNote(note);
     }
-
     if (result != 0) {
       // Success
-      resultSave = 'Status :  Note Saved Successfully';
-
-//      _showAlertDialog('Status', 'Note Saved Successfully');
+      _showAlertDialog('Status', 'Note Saved Successfully');
     } else {
       // Failure
-      resultSave = 'Status : Problem Saving Note';
-//      _showAlertDialog('Status', 'Problem Saving Note');
+      _showAlertDialog('Status', 'Problem Saving Note');
     }
-    listToLastScreen.add(resultSave);
-//    _showSnackBar(context,resultSave);
-    moveToLastScreen();
   }
 
   void _delete() async {

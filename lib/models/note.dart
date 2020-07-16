@@ -8,11 +8,12 @@ class Note {
   String _descriptionNote;
   String _dateNote;
   int _priorityNote;
+  String _colorNote;
 
 
-  Note(this._titleNote, this._dateNote, this._priorityNote, [this._descriptionNote]);
+  Note(this._titleNote, this._dateNote, this._priorityNote, [this._descriptionNote , this._colorNote]);
 
-  Note.withId(this._idNote, this._titleNote, this._dateNote, this._priorityNote, [this._descriptionNote]);
+  Note.withId(this._idNote, this._titleNote, this._dateNote, this._priorityNote, [this._descriptionNote, this._colorNote]);
 
 
 
@@ -25,6 +26,8 @@ class Note {
   int get priorityNote => _priorityNote;
 
   String get dateNote => _dateNote;
+
+  String get colorNote => _colorNote;
 
   set titleNote(String newTitle) {
     if (newTitle.length <= 255) {
@@ -48,6 +51,10 @@ class Note {
     this._dateNote = newDate;
   }
 
+  set colorNote(String newColor) {
+    this._colorNote = newColor;
+  }
+
   // Convert a Note object into a Map object
   Map<String, dynamic> toMap() {
 
@@ -59,6 +66,7 @@ class Note {
     map['description'] = _descriptionNote;
     map['priority'] = _priorityNote;
     map['date'] = _dateNote;
+    map['color'] = _colorNote;
 
     return map;
   }
@@ -70,5 +78,11 @@ class Note {
     this._descriptionNote = map['description'];
     this._priorityNote = map['priority'];
     this._dateNote = map['date'];
+    this._colorNote = map['color'];
+  }
+
+  @override
+  String toString() {
+    return 'Note{_idNote: $_idNote, _titleNote: $_titleNote, _descriptionNote: $_descriptionNote, _dateNote: $_dateNote, _priorityNote: $_priorityNote, _colorNote: $_colorNote}';
   }
 }
