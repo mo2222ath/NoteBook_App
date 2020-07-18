@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:notebook_task_flutter_mhr/Dialog/confirmation_dialog.dart';
 import 'package:notebook_task_flutter_mhr/db_helpers/note_helper.dart';
+import 'package:notebook_task_flutter_mhr/localization/demo_localization.dart';
 import 'package:notebook_task_flutter_mhr/models/note.dart';
 import 'package:notebook_task_flutter_mhr/screens/screenListNote.dart';
 
@@ -22,11 +23,12 @@ class screenDetails extends StatefulWidget {
 // ignore: camel_case_types
 class screenDetailsState extends State<screenDetails> {
   List<String> priority = ["Low", "High"];
+  var listColors = ["Gray",'Green', 'Yellow','Red'];
   var prioritySelected;
   String _titleAppBar;
   String resultSave;
   Note note;
-  var listColors = ['Grey','Green', 'Yellow','Red'];
+
   var colorSelected;
 
   screenDetailsState(this.note, this._titleAppBar);
@@ -47,6 +49,7 @@ class screenDetailsState extends State<screenDetails> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
     TextStyle textStyle = Theme.of(context).textTheme.title;
 
     titleController.text = this.note.titleNote;
@@ -70,7 +73,7 @@ class screenDetailsState extends State<screenDetails> {
                   Padding(
                       padding: EdgeInsets.all(15.0),
                       child: Text(
-                        "Priority",
+                        DemoLocalizations.of(context).getTranslateValue("priority"),
                           style: textStyle,
                       )),
                   Padding(
@@ -80,7 +83,7 @@ class screenDetailsState extends State<screenDetails> {
                   Padding(
                       padding: EdgeInsets.all(15.0),
                       child: Text(
-                        "Color",
+                          DemoLocalizations.of(context).getTranslateValue("color"),
                             style: textStyle
                       )),
                   Padding(
@@ -92,14 +95,15 @@ class screenDetailsState extends State<screenDetails> {
               )),
               Padding(
                 padding: EdgeInsets.all(10.0),
-                child: _createTextFormFiled("Title", "Write Your title here",
+                child: _createTextFormFiled(DemoLocalizations.of(context).getTranslateValue("titleLable")
+                    , DemoLocalizations.of(context).getTranslateValue("titleHint"),
                     textStyle, titleController, 1),
               ),
               Padding(
                   padding: EdgeInsets.all(10.0),
                   child: _createTextFormFiled(
-                      "Description",
-                      "Write Your description here",
+                      DemoLocalizations.of(context).getTranslateValue("descriptionLable"),
+                      DemoLocalizations.of(context).getTranslateValue("descriptionHint"),
                       textStyle,
                       descriptionController,
                       15)),
@@ -108,13 +112,13 @@ class screenDetailsState extends State<screenDetails> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        child: _createButton("Save"),
+                        child: _createButton(DemoLocalizations.of(context).getTranslateValue("saveButton")),
                       ),
                       Container(
                         width: 10.0,
                       ),
                       Expanded(
-                        child: _createButton("Delete"),
+                        child: _createButton(DemoLocalizations.of(context).getTranslateValue("deleteButton")),
                       )
                     ],
                   ))
@@ -165,7 +169,7 @@ class screenDetailsState extends State<screenDetails> {
       maxLines: maxLines,
       controller: controllerName,
       onChanged: (value) {
-        if (label == "Title") {
+        if (label == "Title" || label == "العنوان") {
           updateTitle();
         } else {
           updateDescription();
@@ -190,16 +194,16 @@ class screenDetailsState extends State<screenDetails> {
       ),
       onPressed: () {
         setState(() {
-          if (nameOfButton == "Save") {
+          if (nameOfButton == "Save" || nameOfButton == "حفظ") {
             _save();
-          } else if (nameOfButton == "Delete") {
+          } else if (nameOfButton == "Delete" || nameOfButton == "حذف") {
             if (note.idNote == null) {
               _delete();
             } else {
               var res = showDialog(
                   context: context,
                   builder: (context) =>
-                      ConfirmationDialog("Do You Want To Delete !!"));
+                      ConfirmationDialog(DemoLocalizations.of(context).getTranslateValue("ConfirmationDialog")));
               setState(() {
                 res.then((value) {
                   if (value == true) {
@@ -288,10 +292,12 @@ class screenDetailsState extends State<screenDetails> {
     }
     if (result != 0) {
       // Success
-      _showAlertDialog('Status', 'Note Saved Successfully');
+      _showAlertDialog(DemoLocalizations.of(context).getTranslateValue("status"),
+          DemoLocalizations.of(context).getTranslateValue("msgSucc"));
     } else {
       // Failure
-      _showAlertDialog('Status', 'Problem Saving Note');
+      _showAlertDialog(DemoLocalizations.of(context).getTranslateValue("status"),
+          DemoLocalizations.of(context).getTranslateValue("msgDel"));
     }
   }
 
@@ -307,9 +313,9 @@ class screenDetailsState extends State<screenDetails> {
     // Case 2: User is trying to delete the old note that already has a valid ID.
     int result = await noteHelper.deleteNote(note.idNote);
     if (result != 0) {
-      _showAlertDialog('Status', 'Note Deleted Successfully');
+      _showAlertDialog(DemoLocalizations.of(context).getTranslateValue("status"), DemoLocalizations.of(context).getTranslateValue("msgSucc"));
     } else {
-      _showAlertDialog('Status', 'Error Occured while Deleting Note');
+      _showAlertDialog(DemoLocalizations.of(context).getTranslateValue("status"), DemoLocalizations.of(context).getTranslateValue("msgDel"));
     }
   }
 

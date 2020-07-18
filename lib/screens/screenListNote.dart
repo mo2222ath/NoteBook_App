@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:notebook_task_flutter_mhr/Dialog/confirmation_dialog.dart';
 import 'package:notebook_task_flutter_mhr/db_helpers/note_helper.dart';
+import 'package:notebook_task_flutter_mhr/localization/demo_localization.dart';
+import 'package:notebook_task_flutter_mhr/models/language.dart';
 import 'package:notebook_task_flutter_mhr/models/note.dart';
 import 'package:notebook_task_flutter_mhr/screens/screenDetails.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../main.dart';
 
 // ignore: camel_case_types
 class screenListNote extends StatefulWidget {
@@ -33,11 +37,110 @@ class screenListNoteState extends State<screenListNote> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Notes"),
+        title: Center(
+          child: Text(
+            DemoLocalizations.of(context).getTranslateValue("title"),
+            style: TextStyle(
+              fontSize: 30,
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20, top: 6),
+              child: DropdownButton(
+                icon: Icon(
+                  Icons.language,
+                  color: Colors.white,
+                ),
+                underline: SizedBox(),
+                items: Language.listLanguage()
+                    .map<DropdownMenuItem<Language>>((lang) => DropdownMenuItem(
+                          value: lang,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Text(
+                                lang.flag,
+                                style: TextStyle(fontSize: 25),
+                              ),
+                              Text(lang.name, style: TextStyle(fontSize: 20)),
+                            ],
+                          ),
+                        ))
+                    .toList(),
+//                onTap: () {},
+                onChanged: (Language language) {
+                  changeLanguage(language);
+                },
+              )),
+          Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: IconButton(
+              tooltip: DemoLocalizations.of(context).getTranslateValue("tooltipSearch"),
+              icon: const Icon(Icons.search),
+              onPressed: () async {
+                final Card Selected =
+                    await showSearch<Card>(context: null, delegate: null);
+              },
+            ),
+          ),
+        ],
       ),
       body: _createListView(count, textStyle),
       floatingActionButton: _createFloatingActionButton(),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Image.asset(
+                'images/NoteImg.png',
+                height: 120,
+                width: 120,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white12,
+              ),
+            ),
+//            Padding(
+//              padding: EdgeInsets.all(5),
+//              child:Icon(Icons.arrow_forward) ,
+//            ),
+            ListTile(
+              leading: Icon(
+                Icons.info,
+                color: Colors.white,
+              ),
+              title: Text(
+                DemoLocalizations.of(context).getTranslateValue("about"),
+                style: TextStyle(
+                  fontSize: 30,
+                ),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
     );
+  }
+
+  void changeLanguage(Language language) {
+    Locale temp;
+    switch (language.langCode) {
+      case 'en':
+        temp = Locale(language.langCode, "US");
+        break;
+      case 'ar':
+        temp = Locale(language.langCode, "YE");
+        break;
+      default:
+        temp = Locale(language.langCode, "US");
+    }
+    MyApp.setLocale(context , temp);
   }
 
   Widget _createListView(int count, TextStyle textStyle) {
@@ -62,7 +165,7 @@ class screenListNoteState extends State<screenListNote> {
                   var res = showDialog(
                       context: context,
                       builder: (context) =>
-                          ConfirmationDialog("Do You Want To Delete !!"));
+                          ConfirmationDialog(DemoLocalizations.of(context).getTranslateValue("ConfirmationDialog")));
 //                  res.then((value) =>  print("Id that was loaded: $value"));
                   setState(() {
                     res.then((value) {
@@ -74,8 +177,8 @@ class screenListNoteState extends State<screenListNote> {
                 },
               ),
               onTap: () {
-                debugPrint("List Tapped !! $position");
-                navigateToScreenDetails(this.noteList[position], "Edit Note");
+//                debugPrint("List Tapped !! $position");
+                navigateToScreenDetails(this.noteList[position], DemoLocalizations.of(context).getTranslateValue("editNote"));
               },
             ));
       },
@@ -85,10 +188,10 @@ class screenListNoteState extends State<screenListNote> {
   Widget _createFloatingActionButton() {
     return FloatingActionButton(
       onPressed: () {
-        debugPrint('clicked');
-        navigateToScreenDetails(Note('', '', 2), "Add Note");
+//        debugPrint('clicked');
+        navigateToScreenDetails(Note('', '', 2), DemoLocalizations.of(context).getTranslateValue("addNote"));
       },
-      tooltip: 'Add Note !',
+      tooltip: DemoLocalizations.of(context).getTranslateValue("tooltipAdd"),
       backgroundColor: Colors.tealAccent,
       foregroundColor: Colors.black45,
       child: Icon(Icons.note_add),
@@ -125,7 +228,7 @@ class screenListNoteState extends State<screenListNote> {
   void _deleteNote(BuildContext context, Note note) async {
     int result = await noteHelper.deleteNote(note.idNote);
     if (result != 0) {
-      _showSnackBar(context, 'Note Deleted Successfully !!');
+      _showSnackBar(context, DemoLocalizations.of(context).getTranslateValue("msgDel"));
       updateListView();
     }
   }
@@ -157,15 +260,12 @@ class screenListNoteState extends State<screenListNote> {
   Color getCardColor(var favColor) {
     if (favColor == "Red") {
       return Colors.red;
-    } else if(favColor == "Green") {
+    } else if (favColor == "Green") {
       return Colors.green;
-    }
-    else if(favColor == "Yellow") {
+    } else if (favColor == "Yellow") {
       return Colors.yellow;
-    }
-    else {
+    } else {
       return Colors.grey;
     }
   }
-
 }
