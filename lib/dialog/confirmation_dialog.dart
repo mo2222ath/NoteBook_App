@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notebook_task_flutter_mhr/localization/demo_localization.dart';
 
 // ignore: must_be_immutable
 class ConfirmationDialog extends StatelessWidget {
@@ -19,9 +20,10 @@ class ConfirmationDialog extends StatelessWidget {
   _buildChild(BuildContext context) => Container(
         height: 350,
         decoration: BoxDecoration(
-            color: Colors.white10,
+            color: Colors.redAccent,
             shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.all(Radius.circular(12))),
+            borderRadius: BorderRadius.all(Radius.circular(12))
+        ),
         child: Column(
           children: <Widget>[
             Container(
@@ -47,7 +49,7 @@ class ConfirmationDialog extends StatelessWidget {
             Text(
               msg,
               style: TextStyle(
-                  fontSize: 35,
+                  fontSize: 25,
                   color: Colors.white,
                   fontWeight: FontWeight.bold),
             ),
@@ -57,47 +59,50 @@ class ConfirmationDialog extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 16, left: 16),
               child: Text(
-                'If Delete button is pressed by mistake then click on "No" to continue.',
-                style: TextStyle(color: Colors.green, fontSize: 20),
+                DemoLocalizations.of(context).getTranslateValue("ConfirmationDialogHint"),
+                style: TextStyle(color: Colors.lime, fontSize: 20),
                 textAlign: TextAlign.center,
               ),
             ),
             SizedBox(
               height: 20,
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text(
-                    'No',
-                    style: TextStyle(
-                      fontSize: 20,
+            Expanded(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: Text(
+                      DemoLocalizations.of(context).getTranslateValue("no"),
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
                     ),
+                    textColor: Colors.white,
                   ),
-                  textColor: Colors.white,
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    return Navigator.of(context).pop(true);
-                  },
-                  child: Text(
-                    'Yes',
-                    style: TextStyle(
-                      fontSize: 20,
+                  SizedBox(
+                    width: 8,
+                  ),
+                  RaisedButton(
+                    onPressed: () {
+                      return Navigator.of(context).pop(true);
+                    },
+                    child: Text(
+                      DemoLocalizations.of(context).getTranslateValue("yes"),
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
                     ),
-                  ),
-                  color: Colors.white,
-                  textColor: Colors.redAccent,
-                )
-              ],
+                    color: Colors.white,
+                    textColor: Colors.redAccent,
+                  )
+                ],
+              ),
             )
+
           ],
         ),
       );

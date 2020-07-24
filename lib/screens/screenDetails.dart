@@ -4,9 +4,8 @@ import 'package:notebook_task_flutter_mhr/Dialog/confirmation_dialog.dart';
 import 'package:notebook_task_flutter_mhr/db_helpers/note_helper.dart';
 import 'package:notebook_task_flutter_mhr/localization/demo_localization.dart';
 import 'package:notebook_task_flutter_mhr/models/note.dart';
-import 'package:notebook_task_flutter_mhr/screens/screenListNote.dart';
 
-// ignore: camel_case_types, must_be_immutable
+// ignore: camel_case_types
 class screenDetails extends StatefulWidget {
   final String _titleAppBar;
   final Note note;
@@ -15,7 +14,6 @@ class screenDetails extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return screenDetailsState(this.note, this._titleAppBar);
   }
 }
@@ -23,7 +21,7 @@ class screenDetails extends StatefulWidget {
 // ignore: camel_case_types
 class screenDetailsState extends State<screenDetails> {
   List<String> priority = ["Low", "High"];
-  var listColors = ["Gray",'Green', 'Yellow','Red'];
+  var listColors = ["Gray", 'Green', 'Pink', 'Red'];
   var prioritySelected;
   String _titleAppBar;
   String resultSave;
@@ -40,7 +38,6 @@ class screenDetailsState extends State<screenDetails> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     prioritySelected = priority[0];
     colorSelected = listColors[0];
@@ -48,9 +45,13 @@ class screenDetailsState extends State<screenDetails> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-
-    TextStyle textStyle = Theme.of(context).textTheme.title;
+    // TextStyle textStyle = Theme.of(context).textTheme.headline5;
+    TextStyle textStyle = TextStyle(
+      fontSize: 30,
+      // fontFamily: "Orbitron",
+      fontFamily: "Caveat",
+      letterSpacing: 1.5,
+    );
 
     titleController.text = this.note.titleNote;
     descriptionController.text = this.note.descriptionNote;
@@ -73,8 +74,9 @@ class screenDetailsState extends State<screenDetails> {
                   Padding(
                       padding: EdgeInsets.all(15.0),
                       child: Text(
-                        DemoLocalizations.of(context).getTranslateValue("priority"),
-                          style: textStyle,
+                        DemoLocalizations.of(context)
+                            .getTranslateValue("priority"),
+                        style: textStyle,
                       )),
                   Padding(
                     padding: EdgeInsets.all(10.0),
@@ -83,9 +85,9 @@ class screenDetailsState extends State<screenDetails> {
                   Padding(
                       padding: EdgeInsets.all(15.0),
                       child: Text(
-                          DemoLocalizations.of(context).getTranslateValue("color"),
-                            style: textStyle
-                      )),
+                          DemoLocalizations.of(context)
+                              .getTranslateValue("color"),
+                          style: textStyle)),
                   Padding(
                     padding: EdgeInsets.all(5.0),
                     child:
@@ -95,15 +97,22 @@ class screenDetailsState extends State<screenDetails> {
               )),
               Padding(
                 padding: EdgeInsets.all(10.0),
-                child: _createTextFormFiled(DemoLocalizations.of(context).getTranslateValue("titleLable")
-                    , DemoLocalizations.of(context).getTranslateValue("titleHint"),
-                    textStyle, titleController, 1),
+                child: _createTextFormFiled(
+                    DemoLocalizations.of(context)
+                        .getTranslateValue("titleLable"),
+                    DemoLocalizations.of(context)
+                        .getTranslateValue("titleHint"),
+                    textStyle,
+                    titleController,
+                    1),
               ),
               Padding(
                   padding: EdgeInsets.all(10.0),
                   child: _createTextFormFiled(
-                      DemoLocalizations.of(context).getTranslateValue("descriptionLable"),
-                      DemoLocalizations.of(context).getTranslateValue("descriptionHint"),
+                      DemoLocalizations.of(context)
+                          .getTranslateValue("descriptionLable"),
+                      DemoLocalizations.of(context)
+                          .getTranslateValue("descriptionHint"),
                       textStyle,
                       descriptionController,
                       15)),
@@ -112,13 +121,15 @@ class screenDetailsState extends State<screenDetails> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        child: _createButton(DemoLocalizations.of(context).getTranslateValue("saveButton")),
+                        child: _createButton(DemoLocalizations.of(context)
+                            .getTranslateValue("saveButton")),
                       ),
                       Container(
                         width: 10.0,
                       ),
                       Expanded(
-                        child: _createButton(DemoLocalizations.of(context).getTranslateValue("deleteButton")),
+                        child: _createButton(DemoLocalizations.of(context)
+                            .getTranslateValue("deleteButton")),
                       )
                     ],
                   ))
@@ -186,11 +197,18 @@ class screenDetailsState extends State<screenDetails> {
 
   Widget _createButton(String nameOfButton) {
     return RaisedButton(
-      color: Theme.of(context).primaryColorDark,
-      textColor: Theme.of(context).primaryColorLight,
+      color: (nameOfButton == "Save" || nameOfButton == "حفظ")
+          ? Colors.green
+          : Colors.red,
+      textColor: Colors.white,
       child: Text(
         nameOfButton,
         textScaleFactor: 1.5,
+        style: TextStyle(
+          // fontFamily: "Orbitron",
+          fontFamily: "Caveat",
+          letterSpacing: 1.5,
+        ),
       ),
       onPressed: () {
         setState(() {
@@ -202,8 +220,9 @@ class screenDetailsState extends State<screenDetails> {
             } else {
               var res = showDialog(
                   context: context,
-                  builder: (context) =>
-                      ConfirmationDialog(DemoLocalizations.of(context).getTranslateValue("ConfirmationDialog")));
+                  builder: (context) => ConfirmationDialog(
+                      DemoLocalizations.of(context)
+                          .getTranslateValue("ConfirmationDialog")));
               setState(() {
                 res.then((value) {
                   if (value == true) {
@@ -248,19 +267,18 @@ class screenDetailsState extends State<screenDetails> {
     return priority;
   }
 
-  getSelectedColor(){
-    if(note.idNote == null){
+  getSelectedColor() {
+    if (note.idNote == null) {
       return colorSelected;
-    }
-    else {
+    } else {
       return note.colorNote;
     }
   }
 
   void updateColor(String value) {
-        print("*************************");
-        print(value);
-        note.colorNote = value;
+    print("*************************");
+    print(value);
+    note.colorNote = value;
   }
 
   void updateTitle() {
@@ -292,11 +310,13 @@ class screenDetailsState extends State<screenDetails> {
     }
     if (result != 0) {
       // Success
-      _showAlertDialog(DemoLocalizations.of(context).getTranslateValue("status"),
+      _showAlertDialog(
+          DemoLocalizations.of(context).getTranslateValue("status"),
           DemoLocalizations.of(context).getTranslateValue("msgSucc"));
     } else {
       // Failure
-      _showAlertDialog(DemoLocalizations.of(context).getTranslateValue("status"),
+      _showAlertDialog(
+          DemoLocalizations.of(context).getTranslateValue("status"),
           DemoLocalizations.of(context).getTranslateValue("msgDel"));
     }
   }
@@ -313,9 +333,13 @@ class screenDetailsState extends State<screenDetails> {
     // Case 2: User is trying to delete the old note that already has a valid ID.
     int result = await noteHelper.deleteNote(note.idNote);
     if (result != 0) {
-      _showAlertDialog(DemoLocalizations.of(context).getTranslateValue("status"), DemoLocalizations.of(context).getTranslateValue("msgSucc"));
+      _showAlertDialog(
+          DemoLocalizations.of(context).getTranslateValue("status"),
+          DemoLocalizations.of(context).getTranslateValue("msgSucc"));
     } else {
-      _showAlertDialog(DemoLocalizations.of(context).getTranslateValue("status"), DemoLocalizations.of(context).getTranslateValue("msgDel"));
+      _showAlertDialog(
+          DemoLocalizations.of(context).getTranslateValue("status"),
+          DemoLocalizations.of(context).getTranslateValue("msgDel"));
     }
   }
 
@@ -328,11 +352,11 @@ class screenDetailsState extends State<screenDetails> {
     showDialog(context: context, builder: (_) => alertDialog);
   }
 
-  void _showSnackBar(BuildContext context, String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      duration: Duration(seconds: 1),
-    );
-    Scaffold.of(context).showSnackBar(snackBar);
-  }
+  // void _showSnackBar(BuildContext context, String message) {
+  //   final snackBar = SnackBar(
+  //     content: Text(message),
+  //     duration: Duration(seconds: 1),
+  //   );
+  //   Scaffold.of(context).showSnackBar(snackBar);
+  // }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notebook_task_flutter_mhr/Dialog/confirmation_dialog.dart';
+import 'package:notebook_task_flutter_mhr/Dialog/dialog_about.dart';
 import 'package:notebook_task_flutter_mhr/db_helpers/note_helper.dart';
 import 'package:notebook_task_flutter_mhr/localization/demo_localization.dart';
 import 'package:notebook_task_flutter_mhr/models/language.dart';
@@ -13,7 +14,6 @@ import '../main.dart';
 class screenListNote extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return screenListNoteState();
   }
 }
@@ -26,28 +26,33 @@ class screenListNoteState extends State<screenListNote> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-
     if (noteList == null) {
       noteList = List<Note>();
       updateListView();
     }
 
-    TextStyle textStyle = Theme.of(context).textTheme.headline6;
+    // final TextTheme = TextStyle()
+
+    // TextStyle textStyle = Theme.of(context).textTheme.headline6;
+    TextStyle textStyle = TextStyle(
+      fontSize: 30,
+      // fontFamily: "Orbitron",
+      fontFamily: "Caveat",
+      letterSpacing: 1.5,
+    );
 
     return Scaffold(
       appBar: AppBar(
         title: Center(
           child: Text(
             DemoLocalizations.of(context).getTranslateValue("title"),
-            style: TextStyle(
-              fontSize: 30,
-            ),
+            style: TextStyle(fontSize: 50, fontFamily: "Caveat"),
           ),
         ),
         actions: <Widget>[
+          // * Language Button
           Padding(
-              padding: EdgeInsets.only(right: 20, top: 6),
+              padding: EdgeInsets.only(top: 8),
               child: DropdownButton(
                 icon: Icon(
                   Icons.language,
@@ -62,9 +67,16 @@ class screenListNoteState extends State<screenListNote> {
                             children: <Widget>[
                               Text(
                                 lang.flag,
-                                style: TextStyle(fontSize: 25),
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    // fontFamily: "Orbitron",
+                                    fontFamily: "Caveat"),
                               ),
-                              Text(lang.name, style: TextStyle(fontSize: 20)),
+                              Text(lang.name,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      // fontFamily: "Orbitron",
+                                      fontFamily: "Caveat")),
                             ],
                           ),
                         ))
@@ -77,18 +89,20 @@ class screenListNoteState extends State<screenListNote> {
           Padding(
             padding: EdgeInsets.only(top: 8),
             child: IconButton(
-              tooltip: DemoLocalizations.of(context).getTranslateValue("tooltipSearch"),
-              icon: const Icon(Icons.search),
+              tooltip: DemoLocalizations.of(context)
+                  .getTranslateValue("tooltipSearch"),
+              icon: const Icon(Icons.info),
               onPressed: () async {
-                final Card Selected =
-                    await showSearch<Card>(context: null, delegate: null);
+                showDialog(context: context, builder: (context) => ShowAbout());
               },
             ),
           ),
         ],
       ),
       body: _createListView(count, textStyle),
+      //* Add Button
       floatingActionButton: _createFloatingActionButton(),
+      //* Drawer Button
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -103,25 +117,23 @@ class screenListNoteState extends State<screenListNote> {
                 color: Colors.white12,
               ),
             ),
-//            Padding(
-//              padding: EdgeInsets.all(5),
-//              child:Icon(Icons.arrow_forward) ,
-//            ),
             ListTile(
-              leading: Icon(
-                Icons.info,
-                color: Colors.white,
-              ),
-              title: Text(
-                DemoLocalizations.of(context).getTranslateValue("about"),
-                style: TextStyle(
-                  fontSize: 30,
+                leading: Icon(
+                  Icons.info,
+                  color: Colors.white,
                 ),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
+                title: Text(
+                  DemoLocalizations.of(context).getTranslateValue("about"),
+                  style: TextStyle(
+                      fontSize: 30,
+                      // fontFamily: "Orbitron",
+                      fontFamily: "Caveat"),
+                ),
+                onTap: () {
+                  showDialog(
+                      context: context, builder: (context) => ShowAbout());
+//                  res.then((value) =>  print("Id that was loaded: $value"));
+                }),
           ],
         ),
       ),
@@ -140,7 +152,7 @@ class screenListNoteState extends State<screenListNote> {
       default:
         temp = Locale(language.langCode, "US");
     }
-    MyApp.setLocale(context , temp);
+    MyApp.setLocale(context, temp);
   }
 
   Widget _createListView(int count, TextStyle textStyle) {
@@ -157,15 +169,22 @@ class screenListNoteState extends State<screenListNote> {
                 child: getPriorityIcon(this.noteList[position].priorityNote),
               ),
               title: Text(this.noteList[position].titleNote, style: textStyle),
-              subtitle:
-                  Text(this.noteList[position].dateNote, style: textStyle),
+              subtitle: Text(
+                this.noteList[position].dateNote,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: "Caveat",
+                  letterSpacing: 1.5,
+                ),
+              ),
               trailing: GestureDetector(
                 child: Icon(Icons.delete),
                 onTap: () {
                   var res = showDialog(
                       context: context,
-                      builder: (context) =>
-                          ConfirmationDialog(DemoLocalizations.of(context).getTranslateValue("ConfirmationDialog")));
+                      builder: (context) => ConfirmationDialog(
+                          DemoLocalizations.of(context)
+                              .getTranslateValue("ConfirmationDialog")));
 //                  res.then((value) =>  print("Id that was loaded: $value"));
                   setState(() {
                     res.then((value) {
@@ -178,7 +197,10 @@ class screenListNoteState extends State<screenListNote> {
               ),
               onTap: () {
 //                debugPrint("List Tapped !! $position");
-                navigateToScreenDetails(this.noteList[position], DemoLocalizations.of(context).getTranslateValue("editNote"));
+                navigateToScreenDetails(
+                    this.noteList[position],
+                    DemoLocalizations.of(context)
+                        .getTranslateValue("editNote"));
               },
             ));
       },
@@ -189,7 +211,8 @@ class screenListNoteState extends State<screenListNote> {
     return FloatingActionButton(
       onPressed: () {
 //        debugPrint('clicked');
-        navigateToScreenDetails(Note('', '', 2), DemoLocalizations.of(context).getTranslateValue("addNote"));
+        navigateToScreenDetails(Note('', '', 2),
+            DemoLocalizations.of(context).getTranslateValue("addNote"));
       },
       tooltip: DemoLocalizations.of(context).getTranslateValue("tooltipAdd"),
       backgroundColor: Colors.tealAccent,
@@ -228,7 +251,8 @@ class screenListNoteState extends State<screenListNote> {
   void _deleteNote(BuildContext context, Note note) async {
     int result = await noteHelper.deleteNote(note.idNote);
     if (result != 0) {
-      _showSnackBar(context, DemoLocalizations.of(context).getTranslateValue("msgDel"));
+      _showSnackBar(
+          context, DemoLocalizations.of(context).getTranslateValue("msgDel"));
       updateListView();
     }
   }
@@ -262,10 +286,21 @@ class screenListNoteState extends State<screenListNote> {
       return Colors.red;
     } else if (favColor == "Green") {
       return Colors.green;
-    } else if (favColor == "Yellow") {
-      return Colors.yellow;
+    } else if (favColor == "Pink") {
+      return Colors.pink;
     } else {
       return Colors.grey;
     }
   }
+
+  // void navigateToAbout() async {
+  //   bool res =
+  //       await Navigator.push(context, MaterialPageRoute(builder: (context) {
+  //     return AboutDialog();
+  //   }));
+
+  //   if (res == true) {
+  //     Navigator.pop(context);
+  //   }
+  // }
 }

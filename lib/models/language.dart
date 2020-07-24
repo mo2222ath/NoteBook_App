@@ -1,5 +1,4 @@
-class Language{
-
+class Language {
   int id;
   String flag;
   String name;
@@ -8,11 +7,9 @@ class Language{
   Language(this.id, this.flag, this.name, this.langCode);
 
   static List<Language> listLanguage() {
-    return <Language> [
-      Language( 1 ,'🇾🇪','عربي','ar'),
-      Language( 2 ,'🇺🇸','English','en')
+    return <Language>[
+      Language(1, '🇾🇪', 'عربي', 'ar'),
+      Language(2, '🇺🇸', 'English', 'en')
     ];
   }
-
-
 }
