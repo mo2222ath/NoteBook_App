@@ -6,6 +6,7 @@ import 'package:notebook_task_flutter_mhr/localization/demo_localization.dart';
 import 'package:notebook_task_flutter_mhr/models/language.dart';
 import 'package:notebook_task_flutter_mhr/models/note.dart';
 import 'package:notebook_task_flutter_mhr/screens/screenDetails.dart';
+import 'package:notebook_task_flutter_mhr/screens/search_note.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../main.dart';
@@ -89,11 +90,23 @@ class screenListNoteState extends State<screenListNote> {
           Padding(
             padding: EdgeInsets.only(top: 8),
             child: IconButton(
-              tooltip: DemoLocalizations.of(context)
-                  .getTranslateValue("tooltipSearch"),
+              tooltip: "About",
               icon: const Icon(Icons.info),
               onPressed: () async {
-                showDialog(context: context, builder: (context) => ShowAbout());
+                await showDialog(
+                    context: context, builder: (context) => ShowAbout());
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: IconButton(
+              tooltip: DemoLocalizations.of(context)
+                  .getTranslateValue("tooltipSearch"),
+              icon: const Icon(Icons.search),
+              onPressed: () async {
+                await showSearch(
+                    context: context, delegate: SearchNote(noteList));
               },
             ),
           ),
@@ -292,15 +305,4 @@ class screenListNoteState extends State<screenListNote> {
       return Colors.grey;
     }
   }
-
-  // void navigateToAbout() async {
-  //   bool res =
-  //       await Navigator.push(context, MaterialPageRoute(builder: (context) {
-  //     return AboutDialog();
-  //   }));
-
-  //   if (res == true) {
-  //     Navigator.pop(context);
-  //   }
-  // }
 }

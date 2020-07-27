@@ -115,7 +115,7 @@ class screenDetailsState extends State<screenDetails> {
                           .getTranslateValue("descriptionHint"),
                       textStyle,
                       descriptionController,
-                      15)),
+                      8)),
               Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Row(
@@ -146,6 +146,7 @@ class screenDetailsState extends State<screenDetails> {
           child: Text(item),
         );
       }).toList(),
+      style: TextStyle(fontFamily: "Caveat", fontSize: 20),
       value: getPriorityAsString(note.priorityNote),
       onChanged: (String select) {
         setState(() {
@@ -163,6 +164,7 @@ class screenDetailsState extends State<screenDetails> {
           child: Text(item),
         );
       }).toList(),
+      style: TextStyle(fontFamily: "Caveat", fontSize: 20),
       value: getSelectedColor(),
       onChanged: (String select) {
         setState(() {
@@ -197,6 +199,9 @@ class screenDetailsState extends State<screenDetails> {
 
   Widget _createButton(String nameOfButton) {
     return RaisedButton(
+      shape: StadiumBorder(),
+      elevation: 20,
+      hoverElevation: 50,
       color: (nameOfButton == "Save" || nameOfButton == "حفظ")
           ? Colors.green
           : Colors.red,
